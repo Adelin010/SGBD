@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 
 import com.sgbd.bankingSystem.model.BankAccount;
 import com.sgbd.bankingSystem.repos.repoFR.RepoFR;
@@ -185,6 +186,7 @@ public class AppService {
     /*
      * Concurrent Issues
      */
+    // @Transactional(isolation=Isolation.SERIALIZABLE)
     @Transactional
     public void uncommitedUpdate(String country, int id, double amount){
         try{
@@ -199,6 +201,7 @@ public class AppService {
         
     }
 
+    // @Transactional(isolation = Isolation.READ_COMMITTED)
     @Transactional
     public void uncommitedDoubleAmount(String countryCode, int id, boolean rollback){
         try{
@@ -214,6 +217,7 @@ public class AppService {
         }
     }
 
+    // @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Transactional
     public boolean uncommitedAuthPersona(String countryCode, int id){
         try{
@@ -232,7 +236,8 @@ public class AppService {
     }
 
 
-    @Transactional 
+    // @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional
     public void changeName(String countryCode, int id, String newName){
         BankAccount account = this.getAccount(countryCode, id).get();
         account.setOwnerName(newName);
@@ -240,6 +245,7 @@ public class AppService {
     }
 
 
+    // @Transactional(isolation = Isolation.SERIALIZABLE)
     @Transactional
     public double lostChange(String countryCode, int id, boolean sleep){
         try{
@@ -256,7 +262,8 @@ public class AppService {
         return 0.0;
     }
 
-    @Transactional 
+    // @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional
     public int logAccountsNumber(String countryCode){
         return this.getAllAccounts(countryCode).size();
     }
